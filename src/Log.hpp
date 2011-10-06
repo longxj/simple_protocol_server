@@ -16,7 +16,7 @@ public:
 
 private:
 	int m_iLogLevel;
-	int m_iLogFD;
+	FILE* m_pstFile;
 };
 
 #define LOG(iLogLevel, szLogStr, ...) {}
