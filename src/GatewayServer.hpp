@@ -1,10 +1,10 @@
 #ifndef __GATEWAYSERVER_HPP
 #define __GATEWAYSERVER_HPP
 
-class GatewayServer
+class CGatewayServer
 {
 public:
-	GatewayServer();
+	CGatewayServer();
 
 	int Init();
 	int Run();

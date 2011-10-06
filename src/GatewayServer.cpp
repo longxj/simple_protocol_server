@@ -1,9 +1,9 @@
 #include "GatewayServer.hpp"
 
-int Init()
+int CGatewayServer::Init()
 {
 }
 
-int Run()
+int CGatewayServer::Run()
 {
 }
