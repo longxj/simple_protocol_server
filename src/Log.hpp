@@ -9,7 +9,7 @@ public:
 	CLog();
 
 	int Init(char* szLogFilePath, int iLogLevel = 0);//default is debug level
-	int DoLog(int iLogLevel, char* szLogStr, ...);
+	int DoLog(int iLogLevel, char* szFileName, int iLine, char* szFunction, char* szLogStr, ...);
 
 public:
 	static const int LEVEL_DEBUG = 0;
@@ -21,6 +21,6 @@ private:
 	FILE* m_pstFile;
 };
 
-#define LOG(iLogLevel, szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(iLogLevel, szLogStr, __VA_ARGS__);}
+#define LOG(iLogLevel, szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(iLogLevel, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
 
 #endif

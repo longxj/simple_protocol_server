@@ -24,7 +24,7 @@ int CLog::Init(char* szLogFilePath, int iLogLevel)
 }
 
 
-int CLog::DoLog(int iLogLevel, char* szLogStr, ...)
+int CLog::DoLog(int iLogLevel, char* szFileName, int iLine, char* szFunction, char* szLogStr, ...)
 {
 	if(iLogLevel < m_iLogLevel)
 	{
@@ -38,6 +38,7 @@ int CLog::DoLog(int iLogLevel, char* szLogStr, ...)
 	time_t stTime;
 	time (&stTime);
 	fprintf(m_pstFile, "[%s]", ctime(&stTime));
+	fprintf(m_pstFile, "[%s<%s:%d>]", szFunction, szFileName, iLine);
 	vfprintf(m_pstFile, szLogStr, stArgs);
 
 	va_end(stArgs);
