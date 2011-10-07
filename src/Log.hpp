@@ -1,6 +1,8 @@
 #ifndef __LOG_HPP
 #define __LOG_HPP
 
+#include "Singleton.hpp"
+
 class CLog
 {
 public:
@@ -19,6 +21,6 @@ private:
 	FILE* m_pstFile;
 };
 
-#define LOG(iLogLevel, szLogStr, ...) {}
+#define LOG(iLogLevel, szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(iLogLevel, szLogStr, __VA_ARGS__);}
 
 #endif
