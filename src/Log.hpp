@@ -21,6 +21,11 @@ private:
 	FILE* m_pstFile;
 };
 
-#define LOG(iLogLevel, szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(iLogLevel, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
+
+#define LOG_DEBUG(szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(CLog::LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
+
+#define LOG_INFO(szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(CLog::LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
+
+#define LOG_ERROR(szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(CLog::LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
 
 #endif
