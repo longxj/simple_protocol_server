@@ -1,7 +1,7 @@
 ## 设置编译环境
 CPP := g++
-BIN := ../bin/GatewayServer
-CPP_FLAGS := -Wall -g -fPIC -shared -export-dynamic
+BIN := ../../bin/GatewayServer/GatewayServer.dbg
+CPP_FLAGS := -Wall -g 
 
 ## 获取要编译的源文件，以及把源文件转换为目标文件
 CPP_FILES := $(wildcard *.cpp)

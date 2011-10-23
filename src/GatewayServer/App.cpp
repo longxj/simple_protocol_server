@@ -1,6 +1,7 @@
 #include "App.hpp"
 #include "Log.hpp"
 #include "Singleton.hpp"
+#include "GatewayServer.hpp"
 
 int CApp::Init()
 {
@@ -15,9 +16,11 @@ int CApp::Init()
 	iRet = CSingleton<CGatewayServer>::Instance()->Init();
 	if(iRet < 0)
 	{
-		LOG_ERROR("Error: Init GatewayServer Fail\n");
+		LOG_ERROR("Error: Init GatewayServer Fail. en:%d\n", iRet);
 		return -2;
 	}
+
+	return iRet;
 }
 
 int CApp::Run()

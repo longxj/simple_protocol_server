@@ -11,7 +11,7 @@ class CSingleton
 public:
 	static inline T* Instance()
 	{
-		if(0 == m_stInstance)
+		if(0 == m_stInstance.get())
 		{
 			m_stInstance.reset(new T);
 		}
@@ -20,13 +20,16 @@ public:
 	}
 
 private:
-	Singleton(){}
-	~Singleton(){}
-	Singleton(const Singleton&);
-	Singleton& operator= (const& Singleton&);
+	CSingleton(){}
+	~CSingleton(){}
+	CSingleton(const CSingleton&);
+	CSingleton& operator= (const CSingleton&);
 
 private:
 	static auto_ptr<T> m_stInstance;
-};			
+};
+
+template<class T>
+auto_ptr<T> CSingleton<T>::m_stInstance;
 
 #endif

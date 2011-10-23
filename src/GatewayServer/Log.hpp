@@ -2,14 +2,15 @@
 #define __LOG_HPP
 
 #include "Singleton.hpp"
+#include <stdio.h>
 
 class CLog
 {
 public:
 	CLog();
 
-	int Init(char* szLogFilePath, int iLogLevel = 0);//default is debug level
-	int DoLog(int iLogLevel, char* szFileName, int iLine, char* szFunction, char* szLogStr, ...);
+	int Init(const char* szLogFilePath, int iLogLevel = 0);//default is debug level
+	int DoLog(int iLogLevel, const char* szFileName, int iLine, const char* szFunction, const char* szLogStr, ...);
 
 public:
 	static const int LEVEL_DEBUG = 0;
@@ -22,10 +23,10 @@ private:
 };
 
 
-#define LOG_DEBUG(szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(CLog::LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
+#define LOG_DEBUG(szLogStr, ...) {CSingleton<CLog>::Instance()->DoLog(CLog::LEVEL_DEBUG, __FILE__, __LINE__, __FUNCTION__, szLogStr, #__VA_ARGS__);}
 
-#define LOG_INFO(szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(CLog::LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
+#define LOG_INFO(szLogStr, ...) {CSingleton<CLog>::Instance()->DoLog(CLog::LEVEL_INFO, __FILE__, __LINE__, __FUNCTION__, szLogStr, #__VA_ARGS__);}
 
-#define LOG_ERROR(szLogStr, ...) {CSingleton<CLog>::Instance()->Dolog(CLog::LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, szLogStr, __VA_ARGS__);}
+#define LOG_ERROR(szLogStr, ...) {CSingleton<CLog>::Instance()->DoLog(CLog::LEVEL_ERROR, __FILE__, __LINE__, __FUNCTION__, szLogStr, #__VA_ARGS__);}
 
 #endif

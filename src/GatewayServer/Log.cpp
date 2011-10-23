@@ -1,7 +1,12 @@
 #include "Log.hpp"
 #include <time.h>
+#include <stdarg.h>
 
-int CLog::Init(char* szLogFilePath, int iLogLevel)
+CLog::CLog()
+{
+}
+
+int CLog::Init(const char* szLogFilePath, int iLogLevel)
 {
 	if(!szLogFilePath)
 	{
@@ -21,10 +26,12 @@ int CLog::Init(char* szLogFilePath, int iLogLevel)
 	}
 	
 	m_iLogLevel = iLogLevel;
+
+	return 0;
 }
 
 
-int CLog::DoLog(int iLogLevel, char* szFileName, int iLine, char* szFunction, char* szLogStr, ...)
+int CLog::DoLog(int iLogLevel, const char* szFileName, int iLine, const char* szFunction, const char* szLogStr, ...)
 {
 	if(iLogLevel < m_iLogLevel)
 	{
@@ -42,4 +49,6 @@ int CLog::DoLog(int iLogLevel, char* szFileName, int iLine, char* szFunction, ch
 	vfprintf(m_pstFile, szLogStr, stArgs);
 
 	va_end(stArgs);
+
+	return 0;
 }

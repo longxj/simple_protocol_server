@@ -3,7 +3,7 @@
 int main()
 {
 	int iRet = 0;
-	GatewayServer stGatewayServer;
+	CGatewayServer stGatewayServer;
 	iRet = stGatewayServer.Init();
 	if(iRet < 0)
 	{
