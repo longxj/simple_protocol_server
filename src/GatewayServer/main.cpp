@@ -10,5 +10,7 @@ int main()
 		return iRet;
 	}
 
+	iRet = stGatewayServer.Run();
+
 	return iRet;
 }

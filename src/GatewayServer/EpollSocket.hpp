@@ -4,12 +4,19 @@
 class CEpollSocket
 {
 public:
-	int Init(const int iSocketSize);
+	int Init();
 	
 private:
 	int m_iEpollSocketID;
 	int m_iListenSocketID;
-	int m_iSocketSize;
+	struct epoll_event m_stListenEvent;
+	struct epoll_event m_astEvent[CEpollSocket::MAX_CLIENT_CONNECTION];
+
+public:
+	static const int MAX_CLIENT_CONNECTION;
+
+public:
+	static int SetNonblocking(int iSock);
 	
 };
 
