@@ -4,11 +4,12 @@
 class CEpollSocket
 {
 public:
-	int Init();
+	int Init(const char* szServerAddr, int iPort);
 	
 private:
 	int m_iEpollSocketID;
 	int m_iListenSocketID;
+	struct sockaddr_in m_stServerAddr;
 	struct epoll_event m_stListenEvent;
 	struct epoll_event m_astEvent[CEpollSocket::MAX_CLIENT_CONNECTION];
 
