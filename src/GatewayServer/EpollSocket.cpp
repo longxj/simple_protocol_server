@@ -6,7 +6,6 @@ int CEpollSocket::Init(const char* szServerAddr, int iPort)
 {
 	if(!szServerAddr)
 	{
-		LOG_ERROR("Error: server addr is null. \n");
 		return -1;
 	}
 	
@@ -35,12 +34,12 @@ int CEpollSocket::Init(const char* szServerAddr, int iPort)
 int CEpollSocket::SetNonblocking(int iSock)
 {
 	int iOpts;
-	iOpts=fcntl(iSock,F_GETFL);
+	iOpts = fcntl(iSock, F_GETFL);
 	if(iOpts < 0)
 	{
 		return iOpts;
 	}
-	iOpts = iOpts|O_NONBLOCK;
+	iOpts = iOpts | O_NONBLOCK;
 	int iRet = 0;
 	iRet = fcntl(iSock, F_SETFL, iOpts);
 	if(iRet < 0)
@@ -51,3 +50,81 @@ int CEpollSocket::SetNonblocking(int iSock)
 	return 0;   
 }
 
+//@return: negetive when error occurs, 0 when no error occurs
+int CEpollSocket::Wait（int iTimeout)
+{
+	struct epoll_event astEvent[CEpollSocket::MAX_CLIENT_CONNECTION];
+	memset(m_astEvent, 0, sizeof(m_astEvent));
+	int iFds = epoll_wait(m_iEpollSocketID, astEvent, CEpollSocket::MAX_CLIENT_CONNECTION, iTimeout);
+	if( iFds < 0)
+	{
+		perror("Error: epoll_wait fail.");
+		return iFds;
+	}
+
+	for(int i = 0; i < iFds; i++)
+	{
+			//accept event
+		if(astEvent[i].data.fd == m_iListenSocketID)
+		{
+			struct sockaddr_in stClientAddr;
+			int iClientAddrLen = sizeof(stClientAddr);
+			memset(&stClientAddr, 0, iClientAddrLen);
+			int iConnFd = accept(m_iListenSocketID, (sockaddr* )&stClientAddr, iClientAddrLen);
+			if(iConnFd < 0)
+			{
+				perror("Error: accept fail.");
+				continue;
+			}
+
+			CEpollSocket::SetNonblocking(iConnFd);
+			struct epoll_event stEvent;
+			memset(&stEvent, 0 ,sizeof(stEvent));
+
+			stEvent.data.fd = iConnFd;
+			stEvent.events = EPOLLIN | EPOLLET;
+
+				//register event
+			epoll_ctl(m_iEpollSocketID, EPOLL_CTL_ADD, iConnFd, &stEvent);
+		}
+			//data in event
+		else if(astEvent[i].events & EPOLLIN)
+		{
+			int iSocketFd = -1;
+			iSocketFd = astEvent[i].data.fd;
+			if(iSocketFd < 0)
+			{
+				continue;
+			}
+				//to deal with the input data
+		}
+			//data output event
+		else if(astEvent[i].events & EPLLOUT)
+		{
+				//do nothing
+			continue;
+		}
+	}
+		
+	return 0;
+}
+	
+int CEpollSocket::RegisterEpollEventFunction(void* pFunction, const int iEventType)
+{
+	if(!pFunction)
+	{
+		return -1;
+	}
+	
+	switch(iEventType)
+	{
+		case EPOLLIN:
+		{
+			m_fpEpollInputCallBackFunc = (EpollInputCallBackFunction)pFunction;
+			break;
+		}
+	}
+
+	return 0;
+}				
+		
