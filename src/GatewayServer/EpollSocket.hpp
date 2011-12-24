@@ -1,7 +1,13 @@
 #ifndef __EPOLLSOCKET_HPP
 #define __EPOLLSOCKET_HPP
 
-typedef int (*EpollInputFuction)(int iFd) EpollInputCallBackFunction;
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/epoll.h>
+#include <string.h>
+#include <arpa/inet.h>
+
+typedef int (*EpollInputCallBackFunction)(const int iFd);
 
 class CEpollSocket
 {

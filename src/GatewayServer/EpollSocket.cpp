@@ -1,4 +1,7 @@
 #include "EpollSocket.hpp"
+#include <sys/socket.h>
+#include <fcntl.h>
+#include <stdio.h>
 
 const int CEpollSocket::MAX_CLIENT_CONNECTION = 1000;
 
@@ -27,7 +30,7 @@ int CEpollSocket::Init(const char* szServerAddr, int iPort)
 	m_stServerAddr.sin_family = AF_INET;
 	inet_aton(szServerAddr, &m_stServerAddr.sin_addr);
 	m_stServerAddr.sin_port = htons(iPort);
-	bind(m_iListenSocketID, (sockaddr_in* )&m_stServerAddr, sizeof(m_stServerAddr));
+	bind(m_iListenSocketID, (struct sockaddr* )&m_stServerAddr, sizeof(m_stServerAddr));
 	listen(m_iListenSocketID, CEpollSocket::MAX_CLIENT_CONNECTION);	
 }
 
@@ -51,10 +54,10 @@ int CEpollSocket::SetNonblocking(int iSock)
 }
 
 //@return: negetive when error occurs, 0 when no error occurs
-int CEpollSocket::Wait（int iTimeout)
+int CEpollSocket::Wait(int iTimeout)
 {
 	struct epoll_event astEvent[CEpollSocket::MAX_CLIENT_CONNECTION];
-	memset(m_astEvent, 0, sizeof(m_astEvent));
+	memset(astEvent, 0, sizeof(astEvent));
 	int iFds = epoll_wait(m_iEpollSocketID, astEvent, CEpollSocket::MAX_CLIENT_CONNECTION, iTimeout);
 	if( iFds < 0)
 	{
@@ -70,7 +73,7 @@ int CEpollSocket::Wait（int iTimeout)
 			struct sockaddr_in stClientAddr;
 			int iClientAddrLen = sizeof(stClientAddr);
 			memset(&stClientAddr, 0, iClientAddrLen);
-			int iConnFd = accept(m_iListenSocketID, (sockaddr* )&stClientAddr, iClientAddrLen);
+			int iConnFd = accept(m_iListenSocketID, (sockaddr* )&stClientAddr, (socklen_t*)&iClientAddrLen);
 			if(iConnFd < 0)
 			{
 				perror("Error: accept fail.");
@@ -99,7 +102,7 @@ int CEpollSocket::Wait（int iTimeout)
 				//to deal with the input data
 		}
 			//data output event
-		else if(astEvent[i].events & EPLLOUT)
+		else if(astEvent[i].events & EPOLLOUT)
 		{
 				//do nothing
 			continue;
