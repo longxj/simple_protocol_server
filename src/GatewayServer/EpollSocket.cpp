@@ -2,10 +2,12 @@
 #include <sys/socket.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <sys/types.h>
+#include <netinet/tcp.h>
 
 const int CEpollSocket::MAX_CLIENT_CONNECTION = 1000;
 
-int CEpollSocket::Init(const char* szServerAddr, int iPort)
+int CEpollSocket::Init(const char* szServerAddr, int iPort, bool bUseNagle)
 {
 	if(!szServerAddr)
 	{
@@ -20,6 +22,9 @@ int CEpollSocket::Init(const char* szServerAddr, int iPort)
 		return -1;
 	}
 
+		//defalut is false
+	m_bUseNagle = bUseNagle;
+
 		//add the listen socket into epollsocket
 	memset(&m_stListenEvent, 0, sizeof(m_stListenEvent));
 	m_stListenEvent.data.fd = m_iListenSocketID;
@@ -31,7 +36,9 @@ int CEpollSocket::Init(const char* szServerAddr, int iPort)
 	inet_aton(szServerAddr, &m_stServerAddr.sin_addr);
 	m_stServerAddr.sin_port = htons(iPort);
 	bind(m_iListenSocketID, (struct sockaddr* )&m_stServerAddr, sizeof(m_stServerAddr));
-	listen(m_iListenSocketID, CEpollSocket::MAX_CLIENT_CONNECTION);	
+	listen(m_iListenSocketID, CEpollSocket::MAX_CLIENT_CONNECTION);
+
+	return 0;
 }
 
 int CEpollSocket::SetNonblocking(int iSock)
@@ -51,6 +58,12 @@ int CEpollSocket::SetNonblocking(int iSock)
 	}
 
 	return 0;   
+}
+
+int CEpollSocket::SetNonNagle(int iSock)
+{
+	int iFlag = 1;
+	return setsockopt(iSock, IPPROTO_TCP, TCP_NODELAY, (char *)&iFlag, sizeof(iFlag));
 }
 
 //@return: negetive when error occurs, 0 when no error occurs
@@ -80,7 +93,13 @@ int CEpollSocket::Wait(int iTimeout)
 				continue;
 			}
 
+				//set socket nonblock & nonagle
 			CEpollSocket::SetNonblocking(iConnFd);
+			if(!m_bUseNagle)
+			{				
+				CEpollSocket::SetNonNagle(iConnFd);
+			}
+			
 			struct epoll_event stEvent;
 			memset(&stEvent, 0 ,sizeof(stEvent));
 

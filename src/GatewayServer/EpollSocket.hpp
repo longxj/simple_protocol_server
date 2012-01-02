@@ -12,7 +12,7 @@ typedef int (*EpollInputCallBackFunction)(const int iFd);
 class CEpollSocket
 {
 public:
-	int Init(const char* szServerAddr, int iPort);
+	int Init(const char* szServerAddr, int iPort, bool bUseNagle = true);
 	int Wait(int iTimeout = 0);
 	int RegisterEpollEventFunction(void* pFunction, const int iEventType);
 	
@@ -22,12 +22,14 @@ private:
 	struct sockaddr_in m_stServerAddr;
 	struct epoll_event m_stListenEvent;
 	EpollInputCallBackFunction m_fpEpollInputCallBackFunc;
+	bool m_bUseNagle;
 	
 public:
 	static const int MAX_CLIENT_CONNECTION;
 
 public:
 	static int SetNonblocking(int iSock);
+	static int SetNonNagle(int iSock);
 	
 };
 
