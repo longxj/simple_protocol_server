@@ -12,7 +12,7 @@ typedef int (*EpollInputCallBackFunction)(const int iFd);
 class CEpollSocket
 {
 public:
-	int Init(const char* szServerAddr, int iPort, bool bUseNagle = true);
+	int Init(const char* szServerAddr, const unsigned short usPort, bool bUseNagle = true);
 	int Wait(int iTimeout = 0);
 	int RegisterEpollEventFunction(void* pFunction, const int iEventType);
 	

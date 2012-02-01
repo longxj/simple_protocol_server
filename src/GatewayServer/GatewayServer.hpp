@@ -6,7 +6,10 @@ class CGatewayServer
 public:
 	CGatewayServer();
 
-	int Init();
+	int Init(const char* szServerAddr, const unsigned short usPort);
 	int Run();
+
+private:
+	EpollSocket m_stListenSocket;
 };
 #endif

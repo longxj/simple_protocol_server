@@ -7,7 +7,7 @@
 
 const int CEpollSocket::MAX_CLIENT_CONNECTION = 1000;
 
-int CEpollSocket::Init(const char* szServerAddr, int iPort, bool bUseNagle)
+int CEpollSocket::Init(const char* szServerAddr, const unsigned short usPort, bool bUseNagle)
 {
 	if(!szServerAddr)
 	{
@@ -34,7 +34,7 @@ int CEpollSocket::Init(const char* szServerAddr, int iPort, bool bUseNagle)
 	memset(&m_stServerAddr, 0, sizeof(m_stServerAddr));
 	m_stServerAddr.sin_family = AF_INET;
 	inet_aton(szServerAddr, &m_stServerAddr.sin_addr);
-	m_stServerAddr.sin_port = htons(iPort);
+	m_stServerAddr.sin_port = htons(usPort);
 	bind(m_iListenSocketID, (struct sockaddr* )&m_stServerAddr, sizeof(m_stServerAddr));
 	listen(m_iListenSocketID, CEpollSocket::MAX_CLIENT_CONNECTION);
 
@@ -69,6 +69,7 @@ int CEpollSocket::SetNonNagle(int iSock)
 //@return: negetive when error occurs, 0 when no error occurs
 int CEpollSocket::Wait(int iTimeout)
 {
+	int iRet = 0;
 	struct epoll_event astEvent[CEpollSocket::MAX_CLIENT_CONNECTION];
 	memset(astEvent, 0, sizeof(astEvent));
 	int iFds = epoll_wait(m_iEpollSocketID, astEvent, CEpollSocket::MAX_CLIENT_CONNECTION, iTimeout);
@@ -119,6 +120,10 @@ int CEpollSocket::Wait(int iTimeout)
 				continue;
 			}
 				//to deal with the input data
+			if(m_fpEpollInputCallBackFunc)
+			{
+				iRet = m_fpEpollInputCallBackFunc(iSocketFd);
+			}
 		}
 			//data output event
 		else if(astEvent[i].events & EPOLLOUT)
