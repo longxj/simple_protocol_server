@@ -26,6 +26,7 @@ while( $times > 0 )
 
     #get data for cpu
     my $ret = `top -n 1 | head -n 8 | tail -n 1 |awk '{print $9}'`;
+    chomp($ret);
     print  fcpu "$time\t$ret\n";
 
     #get data for net
