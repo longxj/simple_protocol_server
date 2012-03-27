@@ -1,26 +1,23 @@
 #include "GatewayServer.hpp"
 
-CGatewayServer::CGatewayServer()
+int CGatewayServer::Init()
 {
-}
-
-
-int CGatewayServer::Init(const char* pszIpAddr, const unsigned short usPort)
-{
-	int iRet;
-	iRet = m_stListenSocket.Init(pszIpAddr, usPort, false);
-	if(iRet != 0)
+	int iRt = 0;
+	iRt = m_stEventManager.Init();
+	if (iRt != 0)
 	{
-		LOG_ERROR("Error: init listen socket fail. en:%d\n", iRet);
 		return -1;
 	}
 
-	return iRet;
+	return 0;
 }
 
 int CGatewayServer::Run()
 {
-	int iRet;
+	while (true)
+	{
+		m_stEventManager.Dispatch();
+	}
 
-	return iRet;
+	return 0;
 }
