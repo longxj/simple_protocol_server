@@ -1,0 +1,285 @@
+Terminals unused in grammar
+
+   STMT
+   OP
+   NSPLIT
+   ST_LIST
+   FM_LIST
+   NAME_LIST
+   WH_LIST
+   WHNAME_LIST
+   WHNAME
+   LBORDER
+   RBORDER
+
+
+Grammar
+
+    0 $accept: program $end
+
+    1 program: stmt TERMINATOR
+
+    2 stmt: st_list fm_list
+    3     | st_list fm_list wh_list
+
+    4 st_list: ST name_list
+
+    5 fm_list: FM NAME
+
+    6 wh_list: WH whname_list
+
+    7 name_list: NAME
+    8          | name_list NAME
+
+    9 whname_list: whname
+   10            | whname_list WHSPLIT whname
+
+   11 whname: NAME OPERATOR whvalue
+
+   12 whvalue: NAME
+   13        | NUMBER
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+STMT (258)
+OP (259)
+ST (260) 4
+NSPLIT (261)
+ST_LIST (262)
+FM (263) 5
+NAME (264) 5 7 8 11 12
+FM_LIST (265)
+NAME_LIST (266)
+WH (267) 6
+WHSPLIT (268) 10
+WH_LIST (269)
+WHNAME_LIST (270)
+WHNAME (271)
+OPERATOR (272) 11
+LBORDER (273)
+RBORDER (274)
+TERMINATOR (275) 1
+NUMBER (276) 13
+
+
+Nonterminals, with rules where they appear
+
+$accept (22)
+    on left: 0
+program (23)
+    on left: 1, on right: 0
+stmt (24)
+    on left: 2 3, on right: 1
+st_list (25)
+    on left: 4, on right: 2 3
+fm_list (26)
+    on left: 5, on right: 2 3
+wh_list (27)
+    on left: 6, on right: 3
+name_list (28)
+    on left: 7 8, on right: 4 8
+whname_list (29)
+    on left: 9 10, on right: 6 10
+whname (30)
+    on left: 11, on right: 9 10
+whvalue (31)
+    on left: 12 13, on right: 11
+
+
+state 0
+
+    0 $accept: . program $end
+
+    ST  shift, and go to state 1
+
+    program  go to state 2
+    stmt     go to state 3
+    st_list  go to state 4
+
+
+state 1
+
+    4 st_list: ST . name_list
+
+    NAME  shift, and go to state 5
+
+    name_list  go to state 6
+
+
+state 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 7
+
+
+state 3
+
+    1 program: stmt . TERMINATOR
+
+    TERMINATOR  shift, and go to state 8
+
+
+state 4
+
+    2 stmt: st_list . fm_list
+    3     | st_list . fm_list wh_list
+
+    FM  shift, and go to state 9
+
+    fm_list  go to state 10
+
+
+state 5
+
+    7 name_list: NAME .
+
+    $default  reduce using rule 7 (name_list)
+
+
+state 6
+
+    4 st_list: ST name_list .
+    8 name_list: name_list . NAME
+
+    NAME  shift, and go to state 11
+
+    $default  reduce using rule 4 (st_list)
+
+
+state 7
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+state 8
+
+    1 program: stmt TERMINATOR .
+
+    $default  reduce using rule 1 (program)
+
+
+state 9
+
+    5 fm_list: FM . NAME
+
+    NAME  shift, and go to state 12
+
+
+state 10
+
+    2 stmt: st_list fm_list .
+    3     | st_list fm_list . wh_list
+
+    WH  shift, and go to state 13
+
+    $default  reduce using rule 2 (stmt)
+
+    wh_list  go to state 14
+
+
+state 11
+
+    8 name_list: name_list NAME .
+
+    $default  reduce using rule 8 (name_list)
+
+
+state 12
+
+    5 fm_list: FM NAME .
+
+    $default  reduce using rule 5 (fm_list)
+
+
+state 13
+
+    6 wh_list: WH . whname_list
+
+    NAME  shift, and go to state 15
+
+    whname_list  go to state 16
+    whname       go to state 17
+
+
+state 14
+
+    3 stmt: st_list fm_list wh_list .
+
+    $default  reduce using rule 3 (stmt)
+
+
+state 15
+
+   11 whname: NAME . OPERATOR whvalue
+
+    OPERATOR  shift, and go to state 18
+
+
+state 16
+
+    6 wh_list: WH whname_list .
+   10 whname_list: whname_list . WHSPLIT whname
+
+    WHSPLIT  shift, and go to state 19
+
+    $default  reduce using rule 6 (wh_list)
+
+
+state 17
+
+    9 whname_list: whname .
+
+    $default  reduce using rule 9 (whname_list)
+
+
+state 18
+
+   11 whname: NAME OPERATOR . whvalue
+
+    NAME    shift, and go to state 20
+    NUMBER  shift, and go to state 21
+
+    whvalue  go to state 22
+
+
+state 19
+
+   10 whname_list: whname_list WHSPLIT . whname
+
+    NAME  shift, and go to state 15
+
+    whname  go to state 23
+
+
+state 20
+
+   12 whvalue: NAME .
+
+    $default  reduce using rule 12 (whvalue)
+
+
+state 21
+
+   13 whvalue: NUMBER .
+
+    $default  reduce using rule 13 (whvalue)
+
+
+state 22
+
+   11 whname: NAME OPERATOR whvalue .
+
+    $default  reduce using rule 11 (whname)
+
+
+state 23
+
+   10 whname_list: whname_list WHSPLIT whname .
+
+    $default  reduce using rule 10 (whname_list)
