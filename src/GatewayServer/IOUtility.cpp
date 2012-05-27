@@ -1,7 +1,7 @@
 #include "IOUtility.hpp"
 #include <stdio.h>
 
-void CIOUtility::PrintBin(char* pBuffer, size_t uiSize)
+void CIOUtility::PrintBin(const char* pBuffer, size_t uiSize)
 {
 	if (!pBuffer)
 	{
@@ -27,7 +27,7 @@ void CIOUtility::PrintBin(char* pBuffer, size_t uiSize)
 	}
 }
 
-void CIOUtility::PrintHex(char* pBuffer, size_t uiSize)
+void CIOUtility::PrintHex(const char* pBuffer, size_t uiSize)
 {
 	if (!pBuffer)
 	{
