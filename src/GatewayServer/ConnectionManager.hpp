@@ -15,6 +15,7 @@ public:
 	
 public:
 	int Init(const char* pAddr, const unsigned short ushPort);
+	const CConnection& GetListenerConnection() {return m_stListenerConnection;}
 };
 
 #endif
