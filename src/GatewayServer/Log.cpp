@@ -44,8 +44,30 @@ int CLog::DoLog(int iLogLevel, const char* szFileName, int iLine, const char* sz
 
 	time_t stTime;
 	time (&stTime);
-	fprintf(m_pstFile, "[%s]", ctime(&stTime));
-	fprintf(m_pstFile, "[%s<%s:%d>]", szFunction, szFileName, iLine);
+	fprintf(m_pstFile, "[%s] ", ctime(&stTime));
+	fprintf(m_pstFile, "[%s<%s:%d>] ", szFunction, szFileName, iLine);
+	switch(iLogLevel)
+	{
+		case LEVEL_DEBUG:
+		{
+			fprintf(m_pstFile, "Debug: ");
+			break;
+		}
+		case LEVEL_INFO:
+		{
+			fprintf(m_pstFile, "Info: ");
+			break;
+		}
+		case LEVEL_ERROR:
+		{
+			fprintf(m_pstFile, "Error: ");
+			break;
+		}
+		default:
+		{
+			return -3;
+		}
+	}
 	vfprintf(m_pstFile, szLogStr, stArgs);
 
 	va_end(stArgs);

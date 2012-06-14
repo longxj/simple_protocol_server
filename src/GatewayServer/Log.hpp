@@ -14,8 +14,8 @@ public:
 
 public:
 	static const int LEVEL_DEBUG = 0;
-	static const int LEVEL_ERROR = 1;
-	static const int LEVEL_INFO = 2;
+	static const int LEVEL_INFO = 1;
+	static const int LEVEL_ERROR = 2;
 
 private:
 	int m_iLogLevel;

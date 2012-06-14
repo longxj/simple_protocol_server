@@ -2,6 +2,7 @@
 CPP := g++
 BIN := ../../bin/GatewayServer/GatewayServer.dbg
 CPP_FLAGS := -Wall -g 
+LIB := -levent_core
 
 ## 获取要编译的源文件，以及把源文件转换为目标文件
 CPP_FILES := $(wildcard *.cpp)

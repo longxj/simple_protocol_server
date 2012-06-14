@@ -1,5 +1,9 @@
 #include "IOUtility.hpp"
 #include <stdio.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <netinet/tcp.h>
+#include <netinet/in.h>
 
 void CIOUtility::PrintBin(const char* pBuffer, size_t uiSize)
 {
@@ -8,7 +12,7 @@ void CIOUtility::PrintBin(const char* pBuffer, size_t uiSize)
 		return;
 	}
 
-	for (int i = 0; i < uiSize; i++)
+	for (unsigned int i = 0; i < uiSize; i++)
 	{
 		unsigned char ucTemp = (unsigned char)pBuffer[i];
 		for (int iBit = 0; iBit < 8; iBit++)
@@ -34,7 +38,7 @@ void CIOUtility::PrintHex(const char* pBuffer, size_t uiSize)
 		return;
 	}
 
-	for (int i = 0; i < uiSize; i++)
+	for (unsigned int i = 0; i < uiSize; i++)
 	{
 		unsigned char ucTemp = (unsigned char)pBuffer[i];
 		if (ucTemp < 16)
@@ -46,4 +50,29 @@ void CIOUtility::PrintHex(const char* pBuffer, size_t uiSize)
 			printf("%x", ucTemp);
 		}
 	}
+}
+
+int CIOUtility::SetNonblocking(const int iSock)
+{
+	int iOpts;
+	iOpts = fcntl(iSock, F_GETFL);
+	if(iOpts < 0)
+	{
+		return iOpts;
+	}
+	iOpts = iOpts | O_NONBLOCK;
+	int iRet = 0;
+	iRet = fcntl(iSock, F_SETFL, iOpts);
+	if(iRet < 0)
+	{
+		return iRet;
+	}
+
+	return 0;
+}
+
+int CIOUtility::SetNonNagle(const int iSock)
+{
+	int iFlag = 1;
+	return setsockopt(iSock, IPPROTO_TCP, TCP_NODELAY, (char *)&iFlag, sizeof(iFlag));
 }
