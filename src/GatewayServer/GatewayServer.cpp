@@ -1,3 +1,4 @@
+#include "ComponentManager.hpp"
 #include "Connection.hpp"
 #include "GatewayServer.hpp"
 #include "Log.hpp"
@@ -36,6 +37,9 @@ int CGatewayServer::Init()
 		LOG_ERROR("eventmanager add socket fail. rt:%d\n", iRt);
 		return -7;
 	}
+
+	//add gatewayserver to componentmanager
+	CComponentManager::SetGatewayServer(this);
 	
 	return 0;
 }
