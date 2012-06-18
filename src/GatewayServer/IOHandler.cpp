@@ -47,6 +47,9 @@ void OnRead(int iFd, short shEvent, void* pArg)
 	static char szReadBuffer[MAX_READ_BUFFER_SIZE];
 	
 	int iCount = read(iFd, szReadBuffer, sizeof(szReadBuffer));
-	szReadBuffer[iCount] = 0;
-	printf("recv(%d): %s\n", iCount, szReadBuffer);
+	if (iCount != 0)
+	{
+		szReadBuffer[iCount] = 0;
+		printf("recv(%d): %s\n", iCount, szReadBuffer);
+	}
 }
