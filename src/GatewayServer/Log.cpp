@@ -1,6 +1,7 @@
 #include "Log.hpp"
 #include <time.h>
 #include <stdarg.h>
+#include "StringUtility.hpp"
 
 CLog::CLog()
 {
@@ -44,7 +45,12 @@ int CLog::DoLog(int iLogLevel, const char* szFileName, int iLine, const char* sz
 
 	time_t stTime;
 	time (&stTime);
-	fprintf(m_pstFile, "[%s] ", ctime(&stTime));
+	
+	char* pTimeStr = ctime(&stTime);
+	//rm the last newline
+	CStringUtility::Chomp(pTimeStr);
+	
+	fprintf(m_pstFile, "[%s] ", pTimeStr); 
 	fprintf(m_pstFile, "[%s<%s:%d>] ", szFunction, szFileName, iLine);
 	switch(iLogLevel)
 	{
@@ -71,6 +77,9 @@ int CLog::DoLog(int iLogLevel, const char* szFileName, int iLine, const char* sz
 	vfprintf(m_pstFile, szLogStr, stArgs);
 
 	va_end(stArgs);
+
+	//flush
+	fflush(m_pstFile);
 
 	return 0;
 }

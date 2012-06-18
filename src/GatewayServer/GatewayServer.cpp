@@ -46,6 +46,8 @@ int CGatewayServer::Init()
 
 int CGatewayServer::Run()
 {
+	LOG_INFO("server is running.\n");
+	
 	while (true)
 	{
 		m_stEventManager.Dispatch();
