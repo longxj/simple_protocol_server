@@ -41,33 +41,18 @@ public:
 	}
 
 	/*
-	 * @create a shm if exist resume the shm
+	 * @resume a shm 
 	 * @author seanlong
 	 * @param[in] iKey shm key
 	 * @param[in] iSize shm size
 	 * @return a CShareMemory obj if success or NULL if fail. errno has been set
 	 */       
-	static CShareMemory* CreateShm(key_t iKey, size_t iSize)
+	static CShareMemory* ResumeShm(key_t iKey, size_t iSize)
 	{
-		size_t iTotalSize = iSize + sizeof(CShareMemory);
-		int iShmId = shmget(iKey, iTotalSize, 0666 | IPC_CREATE | IPC_EXCL);
-
-		bool bExist = false;
+		int iShmId = shmget(iKey, iTotalSize, 0666);
 		if (iShmId < 0)
 		{
-			if (errno != EEXIST)
-			{
-				return NULL;
-			}
-			else //shmmem exist
-			{
-				iShmId = shmget(iKey, iTotalSize, 0666);
-				if (iShmId < 0)
-				{
-					return NULL;
-				}
-				bExist = true;
-			}				
+			return NULL;
 		}
 
 		CShareMemory* pShareMemory = shmat(iKey, 0, 0);
@@ -76,16 +61,41 @@ public:
 			return NULL;
 		}
 
-		//depends on bExist to init CShareMemory
-		if (!bExist)
+		//if resume shm, nothing to do
+		return (CShareMemory*)pShareMemory;
+	}
+
+	/*
+	 * @create a shm 
+	 * @author seanlong
+	 * @param[in] iKey shm key
+	 * @param[in] iSize shm size
+	 * @return a CShareMemory obj if success or NULL if fail. errno has been set
+	 */       
+	static CShareMemory* CreateShm(key_t iKey, size_t iSize)
+	{
+		size_t iTotalSize = iSize + sizeof(CShareMemory);
+
+		//create new shm
+		int iShmId = shmget(iKey, iTotalSize, 0666 | IPC_CREATE | IPC_EXCL);
+
+		bool bExist = false;
+		if (iShmId < 0)
 		{
-			//new shm
-			pShareMemory->SetSize(iSize);
-			pShareMemory->SetMemAddr((char*)pShareMemory + sizeof(CShareMemory));
-			pShareMemory->SetShmId(iShmId);
+			return NULL;
 		}
 
-		//if existed shm, nothing to do
+		CShareMemory* pShareMemory = shmat(iKey, 0, 0);
+		if (pShareMemory < 0)
+		{
+			return NULL;
+		}
+
+		//new shm
+		pShareMemory->SetSize(iSize);
+		pShareMemory->SetMemAddr((char*)pShareMemory + sizeof(CShareMemory));
+		pShareMemory->SetShmId(iShmId);
+		
 		return (CShareMemory*)pShareMemory;
 	}
 
