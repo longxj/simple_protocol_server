@@ -1,11 +1,9 @@
-#define __INFILE_HPP
+#ifndef __INFILE_HPP
 #define __INFILE_HPP
 
 #include <string>
 #include <map>
 #include <iostream>
-
-using namespace std;
 
 #define MAX_LINE_BUF_SIZE               80
 #define MAX_SECTION_CONTEXT_BUF_SIZE    40
@@ -14,8 +12,8 @@ using namespace std;
 
 class IniFile
 {
-	typedef std::map< string, string > MapKeyValue;
-	typedef map< string, MapKeyValue > MapSection;
+	typedef std::map<std::string, std::string > MapKeyValue;
+	typedef std::map<std::string, MapKeyValue > MapSection;
 
 public:
 	IniFile();
@@ -26,11 +24,11 @@ public:
 	bool SaveAs(char* szFileName);
 	void ShowFileContext();
 
-	string GetValue(const string& strKey);
-	string GetValueFromSection(const string& strSection, const string& strKey);
+	string GetValue(const std::string& strKey);
+	string GetValueFromSection(const std::string& strSection, const std::string& strKey);
 
-	int GetInt(const string& strKey);
-	float GetFloat(const string& strKey);
+	int GetInt(const std::string& strKey);
+	float GetFloat(const std::string& strKey);
 
 private:
 	void DelInvalidSign(char* szOldLine, char* szNewLine);
@@ -39,11 +37,11 @@ private:
 	bool IsNewSection(char* szLine);
 	bool IsKeyValueLine(char* szLine);
 
-	bool GetNewSectionContext(char* szLine, string& strNewSectionContext);
-	bool GetKeyValue(char* szLine, string& strKey, string& strValue);
+	bool GetNewSectionContext(char* szLine, std::string& strNewSectionContext);
+	bool GetKeyValue(char* szLine, std::string& strKey, std::string& strValue);
 
 private:
-	string m_strFileName;
+	std::string m_strFileName;
 	MapSection m_mapSection;
 };
 

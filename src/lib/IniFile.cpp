@@ -1,4 +1,6 @@
-#include "inifile.h"
+#include "IniFile.hpp"
+
+using namespace std;
 
 IniFile::IniFile( )
 {
