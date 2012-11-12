@@ -1,4 +1,7 @@
 #include "IniFile.hpp"
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -89,14 +92,14 @@ bool IniFile::IsKeyValueLine( char* szLine )
 
 bool IniFile::GetNewSectionContext( char* szLine, string& strNewSectionContext )
 {
-	char szSectionContextBuf[MAX_SECTION_CONTEXT_BUF_SIZE] = {0};
 	strNewSectionContext.clear();
 
 	char* pSectionContextBegin = strchr(szLine, '[');
 	char* pSectionContextEnd = strchr(szLine, ']');
 	int nSectionContextLen = pSectionContextEnd - pSectionContextBegin - 1;
 
-	memcpy_s(szSectionContextBuf, MAX_SECTION_CONTEXT_BUF_SIZE, pSectionContextBegin + 1, nSectionContextLen);
+	char szSectionContextBuf[nSectionContextLen];
+	memcpy(szSectionContextBuf, pSectionContextBegin + 1, nSectionContextLen);
 	strNewSectionContext = szSectionContextBuf;
 
 	return true;
@@ -108,15 +111,15 @@ bool IniFile::GetKeyValue( char* szLine, string& strKey, string& strValue )
 	strValue.clear();
 
 	char* pEqualPos = strchr(szLine, '=');
-	char szKeyBuf[MAX_KEY_SIZE] = {0};
-	char szValueBuf[MAX_VALUE_SIZE] = {0};
 	int nKeyLen = pEqualPos - szLine;
 	int nValueLen = strlen(szLine) - nKeyLen - 1;
 
-	memcpy_s(szKeyBuf, MAX_KEY_SIZE, szLine, nKeyLen);
+	char szKeyBuf[nKeyLen];
+	memcpy(szKeyBuf, szLine, nKeyLen);
 	strKey = szKeyBuf;
 
-	memcpy_s(szValueBuf, MAX_VALUE_SIZE, pEqualPos + 1, nValueLen);
+	char szValueBuf[nValueLen];
+	memcpy(szValueBuf, pEqualPos + 1, nValueLen);
 	strValue = szValueBuf;
 
 	return true;
@@ -144,10 +147,9 @@ bool IniFile::SaveAs( char* szFileName )
 	MapSection::iterator itSection = m_mapSection.begin();
 	for (; itSection != m_mapSection.end(); itSection++)
 	{
-		MapKeyValue& refKeyValueMap File, "\n");
-}
-
-return true;
+	
+	}
+	return true;
 }
 
 void IniFile::ShowFileContext()

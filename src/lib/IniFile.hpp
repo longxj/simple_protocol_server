@@ -24,8 +24,8 @@ public:
 	bool SaveAs(char* szFileName);
 	void ShowFileContext();
 
-	string GetValue(const std::string& strKey);
-	string GetValueFromSection(const std::string& strSection, const std::string& strKey);
+	std::string GetValue(const std::string& strKey);
+	std::string GetValueFromSection(const std::string& strSection, const std::string& strKey);
 
 	int GetInt(const std::string& strKey);
 	float GetFloat(const std::string& strKey);
