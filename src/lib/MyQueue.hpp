@@ -151,10 +151,8 @@ private:
 		}
 
 private:
-	volatile uint64_t pos_;
-	char padding[CACHE_LEN - sizeof(pos_)];
-	uint64_t end_cache_;
-	char padding1[CACHE_LEN - sizeof(end_cache_)];
+	volatile uint64_t pos_ __attribute__((aligned(CACHE_LEN)));
+	uint64_t end_cache_ __attribute__((aligned(CACHE_LEN)));
 	SPSCQueue<DataType>* queue_;
 };
 
@@ -219,9 +217,8 @@ private:
 		}
 
 private:
-	volatile uint64_t pos_;
-	char padding[CACHE_LEN - sizeof(pos_)];
-	uint64_t uint64_t end_cache_;
+	volatile uint64_t pos_ __attribute__((aligned(CACHE_LEN)));
+	uint64_t uint64_t end_cache_ __attribute__((aligned(CACHE_LEN)));
 	SPSCQueue<DataType>* queue_;
 };
 
